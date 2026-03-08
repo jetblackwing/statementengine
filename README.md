@@ -6,8 +6,10 @@ A simple, logical, yet powerful bank statement generator for my own personal act
 ## Features
 
 - **Modern GUI**: Built with CustomTkinter for a beautiful, modern interface
+- **Bank Selection**: Choose between SBI and FB banks with appropriate headers
 - **Account Information Management**: Collect and validate banking account details
 - **PDF Generation**: Generate basic account info PDFs and full statements with transactions
+- **Bank-Specific Headers**: Automatic header images based on selected bank
 - **Cross-Platform**: Works on Windows, Linux, and macOS
 - **Sample Data**: Load sample data for testing and demonstration
 
@@ -78,14 +80,15 @@ python bank.py
 ## Application Features
 
 ### Account Information Tab
+- **Bank Selection**: Choose between SBI and FB banks
 - Enter personal details (name, address, contact info)
 - Account details (CIF, account number, type, etc.)
 - Bank information (IFSC, MICR, branch)
 - Statement period and balance information
 
 ### Statement Generation Tab
-- **Basic Account Info PDF**: Generate a simple PDF with account details
-- **Full Statement with Transactions**: Generate complete bank statement with all transactions, salaries, and adjustments
+- **Basic Account Info PDF**: Generate a simple PDF with account details and bank-specific headers
+- **Full Statement with Transactions**: Generate complete bank statement with all transactions, salaries, and adjustments with bank-specific headers
 
 ### Settings Tab
 - Change color themes (blue, green, dark-blue)

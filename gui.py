@@ -428,6 +428,7 @@ Built with Python and CustomTkinter.
     def generate_pdf(self):
         try:
             stmt_type = self.stmt_type_var.get()
+            selected_bank = self.bank_var.get()
 
             if stmt_type == "basic":
                 # Generate basic account info PDF
@@ -455,13 +456,13 @@ Built with Python and CustomTkinter.
                     "balance": str(self.account_info.cleared_balance),
                 }
 
-                generate_basic_pdf(data)
-                messagebox.showinfo("Success", "Basic account info PDF generated successfully!")
+                generate_basic_pdf(data, selected_bank)
+                messagebox.showinfo("Success", f"Basic account info PDF generated successfully for {selected_bank.upper()}!")
 
             elif stmt_type == "full":
                 # Generate full statement with transactions
-                output_file = generate_statement_pdf(self.account_info)
-                messagebox.showinfo("Success", f"Full statement PDF generated successfully!\nSaved to: {output_file}")
+                output_file = generate_statement_pdf(self.account_info, selected_bank)
+                messagebox.showinfo("Success", f"Full statement PDF generated successfully for {selected_bank.upper()}!\nSaved to: {output_file}")
 
             self.status_label.configure(text="PDF generated successfully", text_color="green")
 

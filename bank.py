@@ -238,15 +238,49 @@ def adjust_to_target_balance(transactions, current_final, target):
 class BankStatementPDF:
     """Generate PDF matching original format"""
 
-    def __init__(self, filename, account_info=None):
+    def __init__(self, filename, account_info=None, bank="sbi"):
         self.c = canvas.Canvas(filename, pagesize=A4)
         self.y = PAGE_HEIGHT - TM
         self.page = 1
         self.total_pages = 15
         self.account_info = account_info
+        self.bank = bank.lower()
+    
+    def find_header_image(self):
+        """Find header image for the current bank"""
+        # Check resources directory first
+        resources_path = os.path.join(os.path.dirname(__file__), "resources", self.bank, "header")
+        if os.path.exists(resources_path):
+            # Look for PNG first, then JPG
+            png_path = os.path.join(resources_path, f"{self.bank}.png")
+            jpg_path = os.path.join(resources_path, f"{self.bank}.jpg")
+            if os.path.exists(png_path):
+                return png_path
+            elif os.path.exists(jpg_path):
+                return jpg_path
+        
+        # Fallback to current directory (legacy support)
+        if os.path.exists(f"{self.bank}.png"):
+            return f"{self.bank}.png"
+        elif os.path.exists(f"{self.bank}.jpg"):
+            return f"{self.bank}.jpg"
+        else:
+            print(f"Warning: No header image found for bank '{self.bank}' in resources/{self.bank}/header/")
+            return None
     
     def add_page_header(self, first_page=False):
         """Add header to page"""
+        # Add bank header image if available
+        if first_page:
+            header_image = self.find_header_image()
+            if header_image:
+                try:
+                    # Add header image at the top
+                    self.c.drawImage(header_image, LM, self.y - 20*mm, width=150*mm, height=15*mm, preserveAspectRatio=True)
+                    self.y -= 25*mm  # Space for header image
+                except Exception as e:
+                    print(f"Warning: Could not add header image: {e}")
+        
         self.c.setFont("Helvetica-Bold", 11)
         self.c.drawString(LM, self.y, "Savings Account")
         self.c.setFont("Helvetica", 7)
@@ -389,13 +423,13 @@ class BankStatementPDF:
     def save(self):
         self.c.save()
 
-def generate_pdf(transactions, output_file, account_info=None):
+def generate_pdf(transactions, output_file, account_info=None, bank="sbi"):
     """Generate the PDF"""
     print("\n" + "="*70)
     print("STEP 4: GENERATING PDF")
     print("="*70)
 
-    pdf = BankStatementPDF(output_file, account_info=account_info)
+    pdf = BankStatementPDF(output_file, account_info=account_info, bank=bank)
     pdf.add_page_header(first_page=True)
     
     for i, txn in enumerate(transactions):
@@ -408,7 +442,7 @@ def generate_pdf(transactions, output_file, account_info=None):
     print(f"📄 Output file: {output_file}")
     print(f"📄 Total pages: {pdf.page}")
 
-def generate_statement_pdf(account_info=None):
+def generate_statement_pdf(account_info=None, bank="sbi"):
     """Generate full statement PDF with transactions (for GUI use)"""
     if account_info is None:
         account_info = create_sample_account_info()
@@ -426,7 +460,7 @@ def generate_statement_pdf(account_info=None):
     filename = account_info.name.replace(" ", "_").upper()
     output_file = os.path.expanduser(f"~/Documents/{filename}_BANK_STATEMENT_{account_info.statement_date.replace('-', '')}.pdf")
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
-    generate_pdf(transactions, output_file, account_info=account_info)
+    generate_pdf(transactions, output_file, account_info=account_info, bank=bank)
 
     return output_file
 

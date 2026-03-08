@@ -92,8 +92,14 @@ def test_basic_pdf():
             "balance": str(info.cleared_balance),
         }
 
-        generate_pdf(data)
-        print("✓ Basic PDF generation successful")
+        # Test with SBI
+        generate_pdf(data, "sbi")
+        print("✓ Basic PDF generation successful for SBI")
+
+        # Test with FB
+        generate_pdf(data, "fb")
+        print("✓ Basic PDF generation successful for FB")
+
         return True
     except Exception as e:
         print(f"✗ Basic PDF generation error: {e}")

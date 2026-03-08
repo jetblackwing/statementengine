@@ -39,7 +39,7 @@ def generate_pdf(data, bank="sbi"):
     normal_style = styles["Normal"]
 
     # Add Header Image
-    image_path = find_header_image()
+    image_path = find_header_image(bank)
     if image_path:
         img = Image(image_path)
         img.drawHeight = 1.2 * inch
@@ -47,7 +47,7 @@ def generate_pdf(data, bank="sbi"):
         elements.append(img)
         elements.append(Spacer(1, 0.3 * inch))
     else:
-        print("Warning: No sbi.png or sbi.jpg found in directory.")
+        print(f"Warning: No header image found for bank '{bank}' in resources/{bank.lower()}/header/")
 
     # Create table data
     table_data = [
