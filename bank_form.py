@@ -41,6 +41,7 @@ class BankingAccountInfo:
         self.statement_date = ""
         self.statement_time = ""
         self.statement_from_date = ""
+        self.statement_to_date = ""
         self.cleared_balance = Decimal("0.00")
         self.currency = "INR"
 
@@ -311,6 +312,7 @@ def create_sample_account_info():
     info.statement_date = "04-02-2026"
     info.statement_time = "14:00"
     info.statement_from_date = "01-08-2025"
+    info.statement_to_date = "31-01-2026"
     info.cleared_balance = Decimal("1286456.00")
 
     return info

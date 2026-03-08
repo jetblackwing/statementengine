@@ -408,6 +408,28 @@ def generate_pdf(transactions, output_file, account_info=None):
     print(f"📄 Output file: {output_file}")
     print(f"📄 Total pages: {pdf.page}")
 
+def generate_statement_pdf(account_info=None):
+    """Generate full statement PDF with transactions (for GUI use)"""
+    if account_info is None:
+        account_info = create_sample_account_info()
+
+    # Step 1: Load all transactions
+    transactions = load_all_transactions()
+
+    # Step 2: Calculate balances
+    final_balance = calculate_balances(transactions, OPENING_BALANCE_AUG1)
+
+    # Step 3: Adjust to target
+    adjust_to_target_balance(transactions, final_balance, TARGET_FINAL_BALANCE)
+
+    # Step 4: Generate PDF
+    filename = account_info.name.replace(" ", "_").upper()
+    output_file = os.path.expanduser(f"~/Documents/{filename}_BANK_STATEMENT_{account_info.statement_date.replace('-', '')}.pdf")
+    os.makedirs(os.path.dirname(output_file), exist_ok=True)
+    generate_pdf(transactions, output_file, account_info=account_info)
+
+    return output_file
+
 def main():
     """Main execution function"""
     print("\n" + "="*70)
