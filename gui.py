@@ -110,6 +110,15 @@ class BankStatementGUI(ctk.CTk):
 
         ctk.CTkLabel(account_frame, text="Account Information", font=ctk.CTkFont(size=16, weight="bold")).pack(pady=5)
 
+        # Bank Selection
+        bank_select_frame = ctk.CTkFrame(account_frame)
+        bank_select_frame.pack(fill="x", padx=5, pady=5)
+        ctk.CTkLabel(bank_select_frame, text="Select Bank:", font=ctk.CTkFont(size=14, weight="bold")).pack(side="left", padx=5)
+        self.bank_var = ctk.StringVar(value="sbi")
+        self.bank_menu = ctk.CTkOptionMenu(bank_select_frame, values=["sbi", "fb"], variable=self.bank_var,
+                                         font=ctk.CTkFont(size=12))
+        self.bank_menu.pack(side="right", padx=5)
+
         # CIF and Account Number
         cif_acc_frame = ctk.CTkFrame(account_frame)
         cif_acc_frame.pack(fill="x", padx=5, pady=2)

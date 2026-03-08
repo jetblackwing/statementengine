@@ -9,15 +9,29 @@ from reportlab.lib.styles import getSampleStyleSheet
 def get_input(prompt):
     return input(f"{prompt}: ")
 
-def find_header_image():
-    if os.path.exists("sbi.png"):
-        return "sbi.png"
-    elif os.path.exists("sbi.jpg"):
-        return "sbi.jpg"
+def find_header_image(bank="sbi"):
+    """Find header image for the specified bank"""
+    # Check resources directory first
+    resources_path = os.path.join(os.path.dirname(__file__), "resources", bank.lower(), "header")
+    if os.path.exists(resources_path):
+        # Look for PNG first, then JPG
+        png_path = os.path.join(resources_path, f"{bank.lower()}.png")
+        jpg_path = os.path.join(resources_path, f"{bank.lower()}.jpg")
+        if os.path.exists(png_path):
+            return png_path
+        elif os.path.exists(jpg_path):
+            return jpg_path
+
+    # Fallback to current directory (legacy support)
+    if os.path.exists(f"{bank.lower()}.png"):
+        return f"{bank.lower()}.png"
+    elif os.path.exists(f"{bank.lower()}.jpg"):
+        return f"{bank.lower()}.jpg"
     else:
+        print(f"Warning: No header image found for bank '{bank}' in resources/{bank.lower()}/header/")
         return None
 
-def generate_pdf(data):
+def generate_pdf(data, bank="sbi"):
     pdf = SimpleDocTemplate("bank_statement.pdf", pagesize=A4)
     elements = []
 
